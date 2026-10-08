@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Read a COA — Every Section, Explained</title>
+<meta name="description" content="Learn to read a Certificate of Analysis: what each section means, what matters most, and the red flags to watch for. Educational only.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("coa-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<style>
+:root{
+  --bg:#0a0f1a; --bg2:#0d1424; --panel:#101a2e; --panel2:#14203a;
+  --line:rgba(148,178,220,.14); --line2:rgba(148,178,220,.22);
+  --ink:#e8eff9; --muted:#93a1bd; --faint:#67748f;
+  --c1:#D29A4B; --c2:#8FAE62; --warn:#BE9440; --bad:#C47474; --ok:#7FA36B;
+  --acc-dim:rgba(210,154,75,.10);
+  --grad:linear-gradient(135deg,#D29A4B,#8FAE62);
+  --r:16px; --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+[data-theme="light"]{
+  --bg:#eef1f6; --bg2:#e7ebf2; --panel:#f7f9fc; --panel2:#ffffff;
+  --line:rgba(30,50,90,.12); --line2:rgba(30,50,90,.2);
+  --ink:#16233a; --muted:#4c5d78; --faint:#7c8aa3;
+  --c1:#A8742C; --c2:#5F7F3D; --warn:#9A6B23; --bad:#A85A5A; --ok:#5E7F4E;
+  --acc-dim:rgba(168,116,44,.08);
+  --grad:linear-gradient(135deg,#A8742C,#5F7F3D);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.65;
+  -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+   radial-gradient(900px 500px at 12% -5%, rgba(34,211,238,.10), transparent 60%),
+   radial-gradient(800px 500px at 88% 12%, rgba(45,212,191,.08), transparent 60%),
+   radial-gradient(1000px 700px at 50% 115%, rgba(245,158,11,.05), transparent 60%)}
+#ambient{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+[data-theme="light"] #ambient{opacity:.55}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:90;background:var(--grad)}
+/* decorative background lab-name typography */
+#bgtext{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bgline{position:absolute;left:-25%;width:150%;transform:rotate(-35deg);will-change:transform}
+.bgtrack{display:inline-block;white-space:nowrap;will-change:transform;animation:drift var(--spd,100s) linear infinite}
+.bgline.rev .bgtrack{animation-direction:reverse}
+.bgtrack b{font-family:var(--font);font-weight:900;letter-spacing:.04em;color:transparent;
+  -webkit-text-stroke:1px var(--sc,rgba(210,154,75,.10))}
+.bgtrack i{font-style:normal;color:transparent;-webkit-text-stroke:1px rgba(148,178,220,.10);margin:0 .7em}
+.lj{--sc:rgba(110,165,95,.13)}
+.lf{--sc:rgba(205,85,85,.13)}
+.ld{--sc:rgba(95,135,205,.13)}
+.lk{--sc:rgba(155,115,205,.12)}
+.lm{--sc:rgba(215,145,65,.12)}
+.lp{--sc:rgba(200,70,70,.12)}
+@keyframes drift{to{transform:translateX(-50%)}}
+@media(max-width:900px){
+  .bgline.mhide{display:none}
+  .bgline span{-webkit-text-stroke-width:1px}
+}
+@media (prefers-reduced-motion:reduce){
+  .bgtrack{animation:none}
+}
+#themeToggle{position:fixed;top:16px;right:16px;z-index:70;display:flex;background:var(--panel);
+  border:1px solid var(--line2);border-radius:999px;padding:3px;gap:2px}
+#themeToggle button{border:0;background:transparent;color:var(--muted);font-family:var(--font);
+  font-size:.78rem;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+#themeToggle button[aria-pressed="true"]{background:var(--acc-dim);color:var(--c1)}
+.layout{display:flex;max-width:1180px;margin:0 auto;position:relative;z-index:1}
+/* sidebar */
+aside.toc{position:sticky;top:0;height:100vh;flex:0 0 250px;padding:90px 18px 30px 26px;overflow:auto}
+aside.toc .t{font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+aside.toc a{display:block;font-size:.83rem;color:var(--muted);text-decoration:none;padding:7px 12px;
+  border-radius:10px;border-left:2px solid transparent;margin-bottom:2px;transition:all .15s}
+aside.toc a:hover{color:var(--ink);background:var(--panel)}
+aside.toc a.on{color:var(--c1);border-left-color:var(--c1);background:var(--acc-dim);font-weight:700}
+/* mobile rail */
+.rail{display:none;position:sticky;top:0;z-index:60;background:color-mix(in srgb,var(--bg) 90%,transparent);
+  backdrop-filter:blur(10px);padding:10px 16px;gap:8px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail a{flex:0 0 auto;font-size:.75rem;font-weight:700;color:var(--muted);text-decoration:none;
+  border:1px solid var(--line2);border-radius:999px;padding:7px 14px;background:var(--panel);white-space:nowrap}
+.rail a.on{color:var(--c1);border-color:var(--c1);background:var(--acc-dim)}
+main{flex:1;min-width:0;padding:0 34px 40px}
+/* hero */
+.hero{padding:84px 0 10px}
+.hero .kicker{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:2.4px;text-transform:uppercase;
+  color:var(--c1);border:1px solid var(--line2);border-radius:999px;padding:6px 16px;margin-bottom:18px;background:var(--acc-dim)}
+.hero h1{font-size:clamp(2.2rem,5.5vw,3.4rem);font-weight:900;letter-spacing:-.02em;line-height:1.08;margin-bottom:12px}
+.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{color:var(--muted);font-size:1.02rem;max-width:640px;margin-bottom:16px}
+.disclaimer{display:inline-block;font-size:.8rem;color:var(--faint);border:1px dashed var(--line2);
+  border-radius:12px;padding:10px 18px;max-width:660px}
+/* chapters */
+.chapter{scroll-margin-top:20px;margin:30px 0;padding:30px 30px 26px;border:1.5px solid transparent;border-radius:20px;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,
+    linear-gradient(135deg,var(--cc1,#D29A4B),var(--cc2,#8FAE62)) border-box;
+  box-shadow:0 24px 60px -40px rgba(0,0,0,.8)}
+.ch-num{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;padding:0 10px;
+  border-radius:11px;background:linear-gradient(135deg,var(--cc1,#D29A4B),var(--cc2,#8FAE62));color:#241a08;font-weight:900;font-size:.95rem;margin-bottom:12px}
+.chapter h2{font-size:1.65rem;font-weight:800;letter-spacing:-.015em;margin-bottom:10px}
+.chapter>p{color:var(--muted);margin-bottom:12px;max-width:680px}
+.chapter>p strong{color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:16px 0}
+.card{border:1.5px solid transparent;border-radius:14px;padding:18px;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,
+    linear-gradient(135deg,var(--cc1),var(--cc2)) border-box;
+  transition:transform .16s ease,box-shadow .16s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -16px var(--cc1)}
+.card .e{font-size:1.4rem}
+.card h3{font-size:.95rem;font-weight:800;margin:8px 0 6px}
+.card p{font-size:.86rem;color:var(--muted)}
+.card p strong{color:var(--ink)}
+.qlist{list-style:none;margin:14px 0}
+.qlist li{border:1.5px solid transparent;border-radius:12px;padding:12px 16px 12px 44px;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,
+    linear-gradient(135deg,var(--cc1),var(--cc2)) border-box;
+  margin-bottom:8px;position:relative;font-size:.9rem;color:var(--muted)}
+.qlist li::before{content:"?";position:absolute;left:14px;top:11px;width:22px;height:22px;border-radius:50%;
+  background:var(--acc-dim);color:var(--cc1);font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center}
+.qlist li strong{color:var(--ink)}
+.check{list-style:none;margin:14px 0}
+.check li{border:1.5px solid transparent;border-radius:12px;padding:12px 16px 12px 42px;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,
+    linear-gradient(135deg,var(--cc1),var(--cc2)) border-box;
+  margin-bottom:8px;position:relative;font-size:.9rem;color:var(--muted)}
+.check li::before{content:"✓";position:absolute;left:15px;top:11px;color:var(--cc1);font-weight:900}
+.check li strong{color:var(--ink)}
+.mist{list-style:none;margin:14px 0;counter-reset:m}
+.mist li{border:1.5px solid transparent;border-radius:12px;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,
+    linear-gradient(135deg,var(--cc1),var(--cc2)) border-box;
+  padding:12px 16px;margin-bottom:8px;font-size:.9rem;color:var(--muted)}
+.mist li strong{color:var(--ink)}
+.take{background:linear-gradient(135deg,var(--acc-dim),rgba(45,212,191,.06));
+  border:1px solid var(--line2);border-radius:var(--r);padding:24px;margin:16px 0}
+.take h3{font-size:1.05rem;font-weight:800;margin-bottom:10px}
+.take ul{list-style:none}
+.take li{font-size:.9rem;color:var(--muted);padding:6px 0 6px 26px;position:relative}
+.take li::before{content:"→";position:absolute;left:4px;color:var(--c1);font-weight:800}
+.take li strong{color:var(--ink)}
+.next{border:1.5px solid transparent;border-radius:var(--r);padding:24px;margin:16px 0;text-align:center;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,
+    linear-gradient(135deg,var(--cc1),var(--cc2)) border-box}
+.next h3{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+.next p{font-size:.9rem;color:var(--muted);max-width:560px;margin:0 auto}
+
+
+
+
+
+
+
+
+
+/* back to top */
+.btt{display:flex;justify-content:center;margin:50px 0 10px}
+.btt a{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:.95rem;
+  color:var(--ink);border:2px solid transparent;border-radius:16px;padding:14px 34px;
+  background:linear-gradient(var(--panel),var(--panel)) padding-box,var(--grad) border-box;
+  transition:transform .16s ease}
+.btt a:hover{transform:translateY(-3px)}
+footer{border-top:1px solid var(--line);margin-top:30px;padding:28px 0 60px;color:var(--muted)}
+footer p{font-size:.85rem;max-width:680px;margin-bottom:8px}
+footer .fine{font-size:.78rem;color:var(--faint)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media(max-width:900px){
+  aside.toc{display:none}
+  .rail{display:flex}
+  main{padding:0 20px 40px}
+  .hero{padding-top:40px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<svg id="ambient" aria-hidden="true" focusable="false"></svg>
+<div id="bgtext" aria-hidden="true"><div class="bgline" style="top:4%;font-size:6rem;--spd:138s"><div class="bgtrack"><span><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i></span><span aria-hidden="true"><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i></span></div></div><div class="bgline rev" style="top:22%;font-size:3.2rem;--spd:106s"><div class="bgtrack"><span><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i></span><span aria-hidden="true"><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i></span></div></div><div class="bgline" style="top:40%;font-size:7rem;--spd:162s"><div class="bgtrack"><span><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i></span><span aria-hidden="true"><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i></span></div></div><div class="bgline rev mhide" style="top:58%;font-size:2.8rem;--spd:119s"><div class="bgtrack"><span><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i></span><span aria-hidden="true"><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i></span></div></div><div class="bgline mhide" style="top:76%;font-size:6rem;--spd:150s"><div class="bgtrack"><span><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i></span><span aria-hidden="true"><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i><b class="lj">JANOSHIK</b><i>·</i><b class="lf">FREEDOM</b><i>·</i><b class="ld">DIAGNOSTICS</b><i>·</i></span></div></div><div class="bgline rev mhide" style="top:90%;font-size:3rem;--spd:100s"><div class="bgtrack"><span><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i></span><span aria-hidden="true"><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i><b class="lk">KOVERA LABS</b><i>·</i><b class="lm">MZ BIOLABS</b><i>·</i><b class="lp">PEPTIDE TEST CANADA</b><i>·</i></span></div></div></div>
+<div id="progress"></div>
+<div id="themeToggle" role="group" aria-label="Theme">
+  <button type="button" data-t="dark" aria-pressed="true">Dark</button>
+  <button type="button" data-t="light" aria-pressed="false">Light</button>
+</div>
+
+<div class="rail" id="rail" aria-label="Chapters"></div>
+<div class="layout">
+  <aside class="toc" aria-label="Table of contents">
+    <div class="t">Contents</div>
+    <nav id="tocNav"></nav>
+  </aside>
+  <main>
+    <header class="hero" id="top">
+      <span class="kicker">Lesson · Quality Control</span>
+      <h1>How to Read <span class="grad">a COA</span></h1>
+      <p class="sub">A Certificate of Analysis only protects you if you know how to read it. Here's what every section means, what actually matters, and the red flags that should make you walk away.</p>
+      <span class="disclaimer">Educational content only — not professional advice. This lesson teaches you how to interpret lab reports; it is not guidance on purchasing or using any product.</span>
+    </header>
+
+    <section class="chapter" id="ch-what">
+      <span class="ch-num">1</span>
+      <h2>What Is a COA?</h2>
+      <p>A <strong>Certificate of Analysis</strong> is a laboratory report summarizing the tests run on a product. Think of it as a <strong>report card</strong> — instead of grading math or science, it grades the quality of the sample that was submitted.</p>
+      <p>A good COA can answer questions like:</p>
+      <ul class="qlist">
+        <li>Is this <strong>actually the peptide</strong> it claims to be?</li>
+        <li><strong>How much peptide</strong> is in the vial?</li>
+        <li><strong>How pure</strong> is the sample?</li>
+        <li>Was it tested for <strong>contaminants</strong>?</li>
+        <li>Was it tested for <strong>sterility</strong>, <strong>heavy metals</strong>, or <strong>endotoxins</strong>?</li>
+      </ul>
+      <p>Not every report covers every test — some are basic, some are comprehensive. And here's the part most people miss: <strong>a COA is only as trustworthy as the lab that produced it and the sample that was tested.</strong></p>
+      
+    </section>
+
+    <section class="chapter" id="ch-header">
+      <span class="ch-num">2</span>
+      <h2>Reading the Header</h2>
+      <p>Before the numbers, check the paperwork. Four details tell you whether the report even applies to what you're holding.</p>
+      <div class="cards">
+        <div class="card"><span class="e">🏷️</span><h3>Product Name</h3><p>The compound tested — <strong>Retatrutide, Tirzepatide, BPC-157</strong>, whatever it may be. Obvious, but always confirm it matches what you're actually buying.</p></div>
+        <div class="card"><span class="e">🔢</span><h3>Batch / Lot Number</h3><p>One production run, one number — like a single recipe. If your vial's batch doesn't match the COA's batch, <strong>your vial wasn't necessarily tested</strong>.</p></div>
+        <div class="card"><span class="e">📅</span><h3>Testing Date</h3><p>A report from years ago says nothing about today's batches. Reliable suppliers <strong>retest as new batches are made</strong> — all-old COAs are worth asking about.</p></div>
+        <div class="card"><span class="e">🔬</span><h3>Lab Information</h3><p>Name, contact, report number, analyst, issue date. Reports you can <strong>independently verify</strong> (QR codes, online lookup) beat random screenshots.</p></div>
+      </div>
+      
+    </section>
+
+    <section class="chapter" id="ch-identity">
+      <span class="ch-num">3</span>
+      <h2>Identity Testing</h2>
+      <p>One question: <strong>is this actually the peptide it claims to be?</strong></p>
+      <p>This is the most important section on the report. If identity fails, nothing else matters — a sample can show perfect purity and perfect sterility and still be the <strong>wrong compound entirely</strong>. Identity first, everything else second.</p>
+    </section>
+
+    <section class="chapter" id="ch-assay">
+      <span class="ch-num">4</span>
+      <h2>Assay (Content)</h2>
+      <p><strong>Assay tells you how much peptide is actually in the sample</strong> — whether the contents match the label. A vial labeled 10 mg that only contains 7 mg can still look pure; you'd just be getting less than you paid for.</p>
+      <p>Many experienced buyers rank assay among the most important sections, because it directly answers whether the product contains the expected amount.</p>
+      
+    </section>
+
+    <section class="chapter" id="ch-purity">
+      <span class="ch-num">5</span>
+      <h2>Purity</h2>
+      <p><strong>Purity measures how clean the sample is</strong> — the share of desired peptide versus impurities and byproducts. This is where most confusion lives:</p>
+      <p><strong>Purity does not tell you how much peptide is in the vial.</strong> Picture a glass of nearly pure orange juice next to the same glass of juice mixed with water and pulp. Same amount of liquid — very different purity. That's why <strong>purity and assay must always be read together</strong>, never alone.</p>
+      
+    </section>
+
+    <section class="chapter" id="ch-sterility">
+      <span class="ch-num">6</span>
+      <h2>Sterility Testing</h2>
+      <p><strong>Sterility testing hunts for living microorganisms</strong> — bacteria or fungi that may have contaminated the product during manufacturing. A passing result means no microbial growth was detected in the tested sample.</p>
+      <p>One caveat: sterility describes the sample <strong>at the time it was tested</strong>. Careless handling after the vial reaches you can still introduce contamination.</p>
+    </section>
+
+    <section class="chapter" id="ch-endotoxin">
+      <span class="ch-num">7</span>
+      <h2>Endotoxin Testing</h2>
+      <p><strong>Endotoxin testing is not sterility testing.</strong> Instead of looking for living bacteria, it measures <strong>bacterial toxins that remain after the bacteria are dead</strong>.</p>
+      <p>This is one of the most misunderstood sections in peptide testing. Sterility and endotoxin answer <strong>different questions</strong> — both are useful, neither replaces the other.</p>
+      
+    </section>
+
+    <section class="chapter" id="ch-metals">
+      <span class="ch-num">8</span>
+      <h2>Heavy Metals &amp; Sign-Off</h2>
+      <div class="cards">
+        <div class="card"><span class="e">⚗️</span><h3>Heavy Metals</h3><p>Looks for <strong>lead, mercury, cadmium, and arsenic</strong> — contaminants that can enter through raw materials, equipment, or the environment.</p></div>
+        <div class="card"><span class="e">✍️</span><h3>Signature &amp; Approval</h3><p>An analyst or reviewer <strong>signs off</strong> on the report, documenting who verified the results. It adds accountability and confirms testing was completed.</p></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="ch-shield">
+      <span class="ch-num">9</span>
+      <h2>A COA Isn't a Magic Shield</h2>
+      <p>The most common mistake: assuming that <strong>merely having a COA makes a supplier trustworthy</strong>. A COA is one data point, not a verdict. Run through these questions every time:</p>
+      <ul class="check">
+        <li><strong>Is the laboratory reputable?</strong> A report is only as good as its source.</li>
+        <li><strong>Is the report recent?</strong> Old reports don't describe current batches.</li>
+        <li><strong>Does the batch number match</strong> the product in your hand?</li>
+        <li><strong>Are the results complete</strong> — identity, assay, purity, and safety testing?</li>
+        <li><strong>Can the report be independently verified</strong>, not just screenshotted?</li>
+        <li><strong>Does the supplier test new batches consistently</strong>, or rest on one old report?</li>
+      </ul>
+      <p>Trustworthy suppliers combine <strong>good testing with transparency, consistency, and a track record</strong>.</p>
+    </section>
+
+    <section class="chapter" id="ch-mistakes">
+      <span class="ch-num">10</span>
+      <h2>Beginner Mistakes</h2>
+      <p>The traps almost everyone falls into at first:</p>
+      <ul class="mist">
+        <li><strong>Staring only at the purity percentage</strong> while ignoring assay, identity, and date.</li>
+        <li><strong>Ignoring the batch number</strong> — the report may not describe your vial at all.</li>
+        <li><strong>Never checking the issue date</strong> on the report.</li>
+        <li><strong>Assuming every lab follows the same standards.</strong> They don't.</li>
+        <li><strong>Believing any PDF with a lab logo must be authentic.</strong> Verify independently.</li>
+        <li><strong>Mixing up purity, assay, sterility, and endotoxin</strong> — four different answers.</li>
+        <li><strong>Treating one old COA as a lifetime guarantee</strong> for every future batch.</li>
+      </ul>
+    </section>
+
+    <section class="chapter" id="ch-takeaways">
+      <span class="ch-num">11</span>
+      <h2>Key Takeaways</h2>
+      <div class="take">
+        <h3>📌 Pin this to memory</h3>
+        <ul>
+          <li>A COA is a <strong>lab report</strong> — not a guarantee of quality by itself.</li>
+          <li>Confirm the <strong>product name</strong> matches what you're buying.</li>
+          <li>Check the <strong>batch number</strong> whenever you can.</li>
+          <li>Check the <strong>testing date</strong> — recent matters.</li>
+          <li><strong>Identity</strong> confirms what the product is.</li>
+          <li><strong>Assay</strong> measures how much peptide is present.</li>
+          <li><strong>Purity</strong> measures how clean the sample is.</li>
+          <li><strong>Sterility and endotoxin</strong> answer different questions.</li>
+          <li><strong>Heavy metals</strong> screening looks for specific contaminants.</li>
+          <li>A trustworthy supplier offers <strong>more than a nice-looking PDF</strong>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="chapter" id="ch-next">
+      <span class="ch-num">12</span>
+      <h2>What's Next</h2>
+      <div class="next">
+        <h3>🔬 Next lesson: Product Testing — What Actually Matters</h3>
+        <p>Now that you can read a COA, it's time to learn how to <strong>interpret</strong> it — why identity, assay, and purity deserve most of your attention, and which tests are most often misunderstood or taken out of context.</p>
+      </div>
+      <div class="btt">
+        <a href="#top"><span style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">↑</span> Back to Top</a>
+      </div>
+    </section>
+
+    <footer>
+      <p><strong style="color:var(--ink)">Educational content only — not professional advice.</strong> This lesson explains how to read laboratory reports. It does not constitute medical, legal, or pharmaceutical advice, nor guidance on purchasing or using any product.</p>
+      <p class="fine">Report formats vary by laboratory; always refer to the specific report in front of you. When in doubt, consult a qualified professional.</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const CHAPTERS = [
+  ["ch-what", "1 · What Is a COA?"],
+  ["ch-header", "2 · Reading the Header"],
+  ["ch-identity", "3 · Identity"],
+  ["ch-assay", "4 · Assay"],
+  ["ch-purity", "5 · Purity"],
+  ["ch-sterility", "6 · Sterility"],
+  ["ch-endotoxin", "7 · Endotoxin"],
+  ["ch-metals", "8 · Metals & Sign-Off"],
+  ["ch-shield", "9 · Not a Magic Shield"],
+  ["ch-mistakes", "10 · Mistakes"],
+  ["ch-takeaways", "11 · Takeaways"],
+  ["ch-next", "12 · What's Next"]
+];
+/* toc + rail */
+$("#tocNav").innerHTML = CHAPTERS.map(([id, label]) =>
+  '<a href="#' + id + '" data-t="' + id + '">' + label + "</a>").join("");
+$("#rail").innerHTML = CHAPTERS.map(([id, label]) =>
+  '<a href="#' + id + '" data-t="' + id + '">' + label + "</a>").join("");
+/* back to top: explicit scroll (works in real tabs and embedded previews) */
+document.querySelectorAll('.btt a').forEach(a => a.addEventListener("click", e => {
+  e.preventDefault();
+  const opts = rm ? { top: 0 } : { top: 0, behavior: "smooth" };
+  try { (window.top || window).scrollTo(opts); }
+  catch (err){ window.scrollTo(0, 0); }
+  try { history.replaceState(null, "", "#top"); } catch (err){}
+}));
+document.querySelectorAll('aside.toc a, .rail a').forEach(a => a.addEventListener("click", e => {
+  e.preventDefault();
+  const el = document.getElementById(a.dataset.t);
+  const y = el.getBoundingClientRect().top + scrollY - 14;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) scrollTo(0, y);
+  else scrollTo({ top: y, behavior: "smooth" });
+  history.replaceState(null, "", "#" + a.dataset.t);
+}));
+/* scrollspy + progress */
+const spy = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting){
+    document.querySelectorAll("[data-t]").forEach(a =>
+      a.classList.toggle("on", a.dataset.t === e.target.id));
+  }
+}), { rootMargin: "-30% 0px -60% 0px" });
+CHAPTERS.forEach(([id]) => { const el = document.getElementById(id); if (el) spy.observe(el); });
+addEventListener("scroll", () => {
+  const h = document.documentElement;
+  const p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+  $("#progress").style.width = (p * 100).toFixed(1) + "%";
+}, { passive: true });
+/* ambient dots */
+const D_DARK = ["#D29A4B","#E0B96E","#8FAE62","#A9C08A","#B4713E","#7D9B57"];
+const D_LIGHT = ["#A8742C","#C08A3D","#5F7F3D","#7D9B57","#96602A","#667F3F"];
+const SVGNS = "http://www.w3.org/2000/svg";
+let aDots = [], aRAF = null, aT = 0;
+const rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function buildAmbient(){
+  const svg = $("#ambient"); svg.innerHTML = ""; aDots = [];
+  const W = innerWidth, H = innerHeight;
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  const pal = document.documentElement.dataset.theme === "light" ? D_LIGHT : D_DARK;
+  for (let k = 0; k < 140; k++){
+    const c = document.createElementNS(SVGNS, "circle");
+    const base = .30 + Math.random() * .35;
+    c.setAttribute("r", (1.4 + Math.random() * 2.2).toFixed(2));
+    c.setAttribute("fill", pal[k % 6]);
+    c.setAttribute("opacity", base.toFixed(2));
+    svg.appendChild(c);
+    aDots.push({ el: c, x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - .5) * .3, vy: (Math.random() - .5) * .3,
+      base, ph: Math.random() * Math.PI * 2, sp: .4 + Math.random() * 1.4 });
+  }
+  if (!rm) startAmbient();
+}
+function recolorAmbient(){
+  const pal = document.documentElement.dataset.theme === "light" ? D_LIGHT : D_DARK;
+  aDots.forEach((d, k) => d.el.setAttribute("fill", pal[k % 6]));
+}
+function tick(){
+  aT += .016;
+  const W = innerWidth, H = innerHeight;
+  for (const d of aDots){
+    d.x = (d.x + d.vx + W) % W; d.y = (d.y + d.vy + H) % H;
+    d.el.setAttribute("transform", "translate(" + d.x.toFixed(1) + " " + d.y.toFixed(1) + ")");
+    d.el.setAttribute("opacity", (d.base * (.7 + .3 * Math.sin(aT * d.sp + d.ph))).toFixed(2));
+  }
+  aRAF = requestAnimationFrame(tick);
+}
+function startAmbient(){ if (!aRAF && !rm) aRAF = requestAnimationFrame(tick); }
+function stopAmbient(){ if (aRAF){ cancelAnimationFrame(aRAF); aRAF = null; } }
+document.addEventListener("visibilitychange", () => document.hidden ? stopAmbient() : startAmbient());
+let rsz; addEventListener("resize", () => { clearTimeout(rsz); rsz = setTimeout(() => { stopAmbient(); buildAmbient(); }, 250); });
+/* theme */
+function setTheme(t){
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem("coa-theme", t); } catch(e){}
+  document.querySelectorAll("#themeToggle button").forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset.t === t));
+  recolorAmbient();
+}
+document.querySelectorAll("#themeToggle button").forEach(b =>
+  b.addEventListener("click", () => setTheme(b.dataset.t)));
+/* per-chapter tile colors: muted orange-to-green spectrum */
+const PAIRS = [
+  ["#C08A3D","#D9AE5F"],["#B4713E","#D69A5F"],["#9A8B45","#C0B06A"],
+  ["#7D9B57","#A9C08A"],["#5F8A5A","#8FB48A"],["#5E9386","#8FC0B3"]
+];
+function paintChapters(){
+  document.querySelectorAll(".chapter").forEach((sec, i) => {
+    const pr = PAIRS[i % PAIRS.length];
+    sec.style.setProperty("--cc1", pr[0]);
+    sec.style.setProperty("--cc2", pr[1]);
+  });
+}
+/* init */
+document.addEventListener("DOMContentLoaded", () => {
+  let saved = "dark";
+  try { saved = localStorage.getItem("coa-theme") || "dark"; } catch(e){}
+  document.querySelectorAll("#themeToggle button").forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset.t === saved));
+  recolorAmbient();
+  buildAmbient();
+  paintChapters();
+});
+</script>
+</body>
+</html>
